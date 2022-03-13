@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EntityFramwork
 
 namespace ClassAsProperty
 {
     public static class ContextUtility
     {
-        static void ConfigureCAPClass<T,T2,T3>()where T : IClassAsProperty<T3> where T2 
+        private void ConfigureeCAPProperty<T,T2,T3> where T
+        static void ConfigureCAPONETOONE<T,T2,T3>()where T : IClassAsProperty<T3> where T2 
         {
             modelBuilder.Entity<T>(e =>
             {

@@ -9,12 +9,12 @@ namespace ClassAsProperty
     public static class ClassAsPropertyMethodBase
     {
 
-        public static T? GetmethodT<T, T2>(ref T2 TargetPoperty) where T : struct where T2 : IClassAsProperty<T>
+        public static T? GetmethodT<T, T2>(this T2 TargetPoperty) where T : struct where T2 : ICompornentClass<T>
         {
             return TargetPoperty?.Value;
         }
 
-        public static void SetMetgidT<T, T2>(T value, ref T2 TargetProperty) where T : struct where T2 : IClassAsProperty<T>, new()
+        public static void SetmethodT<T, T2>(this T2 TargetProperty, T value) where T : struct where T2 : ICompornentClass<T>, new()
         {
             if (TargetProperty is null)
             { TargetProperty = new T2(); }
