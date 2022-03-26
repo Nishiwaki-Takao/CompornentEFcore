@@ -1,29 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EntityFramwork
-
-namespace ClassAsProperty
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Linq.Expressions;
+namespace CompornentEFcore
 {
-    public static class ContextUtility
+    public static partial class ContextUtility
     {
-        private void ConfigureeCAPProperty<T,T2,T3> where T
-        static void ConfigureCAPONETOONE<T,T2,T3>()where T : IClassAsProperty<T3> where T2 
+        public static EntityTypeBuilder<TEntity> ConfigureCopositeSide<TEntity, TRelated, DataType>(
+                        this ModelBuilder modelBuilder,
+            Expression<Func<TEntity, TRelated>> ConpositeSideProperty,
+            TRelated CompornentClass
+            )
+                        where TEntity : class where TRelated : CompornentClass<TEntity, DataType> where DataType : struct
         {
-            modelBuilder.Entity<T>(e =>
+            modelBuilder.Entity<TEntity>(e =>
             {
-                e.HasKey(e => e.InstalledTubID);
-                e.Property(e => e.InstalledTubID).IsRequired();
-                e.Property(e => e.Uninstalldate).IsRequired();
-                e.HasOne(e => e.Unistalledtub)
-                 .WithOne(d => d.UninstallDate)
-                 .HasForeignKey<TubUninstallDay>(e => e.InstalledTubID);
-                ;
+                e.Navigation(ConpositeSideProperty);
+                e.HasOne(ConpositeSideProperty)
+                .WithOne(CompornentClass => CompornentClass.CompornentSideNavigation);
             });
+            return modelBuilder.Entity<TEntity>();
         }
-
-        static void ConfigureCompoundClass<T,T2>()
+        public static EntityTypeBuilder<TEntity> ConfigureCompornentSide<TEntity, TRelated, DataType>(
+            this ModelBuilder modelBuilder,
+            Expression<Func<TEntity, object>> ConpositeSideID,
+            Expression<Func<TEntity, TRelated>> ConpositeSideProperty,
+            TRelated CompornentClass)
+            where TEntity : class where TRelated : CompornentClass<TEntity, DataType> where DataType : struct
+        {
+            modelBuilder.Entity<TRelated>(d =>
+            {
+                d.ToTable(typeof(TEntity).ToString() + '_' + ConpositeSideProperty.Type.ToString() + "_Values");
+                d.HasKey(d => d.iD);
+                d.Property(d => d.value).IsRequired();
+                d.Navigation(d => d.CompornentSideNavigation);
+                d.HasOne(d => d.CompornentSideNavigation)
+                .WithOne(ConpositeSideProperty)
+                   .HasForeignKey(ConpositeSideID);
+            });
+            return modelBuilder.Entity<TEntity>();
+        }
     }
 }
