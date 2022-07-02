@@ -7,38 +7,30 @@ namespace CompornentEFcore
     public static partial class ContextUtility
     {
         public static EntityTypeBuilder<TEntity> ConfigureCopositeSide<TEntity, TRelated, DataType>(
-                        this ModelBuilder modelBuilder,
-            Expression<Func<TEntity, TRelated>> ConpositeSideProperty,
-            TRelated CompornentClass
+                        this EntityTypeBuilder<TEntity> EntityTypeBuilder,
+            Expression<Func<TEntity, TRelated>> ConpositeSideProperty
             )
                         where TEntity : class where TRelated : CompornentClass<TEntity, DataType> where DataType : struct
         {
-            modelBuilder.Entity<TEntity>(e =>
-            {
-                e.Navigation(ConpositeSideProperty);
-                e.HasOne(ConpositeSideProperty)
+            EntityTypeBuilder.Navigation(ConpositeSideProperty);
+            EntityTypeBuilder.HasOne(ConpositeSideProperty)
                 .WithOne(CompornentClass => CompornentClass.CompornentSideNavigation);
-            });
-            return modelBuilder.Entity<TEntity>();
+            return EntityTypeBuilder;
         }
-        public static EntityTypeBuilder<TEntity> ConfigureCompornentSide<TEntity, TRelated, DataType>(
-            this ModelBuilder modelBuilder,
+        public static EntityTypeBuilder<TRelated> ConfigureCompornentSide<TEntity, TRelated, DataType>(
+            this EntityTypeBuilder<TRelated> EntityTypeBuilder,
             Expression<Func<TEntity, object>> ConpositeSideID,
-            Expression<Func<TEntity, TRelated>> ConpositeSideProperty,
-            TRelated CompornentClass)
+            Expression<Func<TEntity, TRelated>> ConpositeSideProperty)
             where TEntity : class where TRelated : CompornentClass<TEntity, DataType> where DataType : struct
         {
-            modelBuilder.Entity<TRelated>(d =>
-            {
-                d.ToTable(typeof(TEntity).ToString() + '_' + ConpositeSideProperty.Type.ToString() + "_Values");
-                d.HasKey(d => d.iD);
-                d.Property(d => d.value).IsRequired();
-                d.Navigation(d => d.CompornentSideNavigation);
-                d.HasOne(d => d.CompornentSideNavigation)
+            EntityTypeBuilder.ToTable(typeof(TEntity).ToString() + '_' + ConpositeSideProperty.Type.ToString() + "_Values");
+            EntityTypeBuilder.HasKey(d => d.iD);
+            EntityTypeBuilder.Property(d => d.value).IsRequired();
+            EntityTypeBuilder.Navigation(d => d.CompornentSideNavigation);
+            EntityTypeBuilder.HasOne(d => d.CompornentSideNavigation)
                 .WithOne(ConpositeSideProperty)
                    .HasForeignKey(ConpositeSideID);
-            });
-            return modelBuilder.Entity<TEntity>();
+            return EntityTypeBuilder;
         }
     }
 }
