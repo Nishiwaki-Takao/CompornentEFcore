@@ -3,15 +3,14 @@
     public static class ClassAsPropertyMethodBase
     {
 
-        public static DataType? Getmethod<TEntity, DataType>(this CompornentClass<TEntity, DataType> TargetPoperty) where TEntity : class where DataType : struct
+        public static DataType? Getmethod<DataType>(this CompornentClass<DataType> TargetPoperty) where DataType : struct
         {
             return TargetPoperty?.value;
         }
 
-        public static void Setmethod<TEntity, DataType, CompornentClass>(this CompornentClass<TEntity, DataType> TargetProperty, DataType value)
-            where TEntity : class
+        public static void Setmethod<DataType, CompornentClass>(this CompornentClass TargetProperty, DataType value)
             where DataType : struct
-            where CompornentClass : CompornentClass<TEntity, DataType>, new()
+            where CompornentClass : CompornentClass<DataType>, new()
         {
             if (TargetProperty is null)
             { TargetProperty = new CompornentClass(); }

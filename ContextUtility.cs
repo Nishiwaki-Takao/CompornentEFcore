@@ -8,28 +8,27 @@ namespace CompornentEFcore
     {
         public static EntityTypeBuilder<TEntity> ConfigureCopositeSide<TEntity, TRelated, DataType>(
                         this EntityTypeBuilder<TEntity> EntityTypeBuilder,
-            Expression<Func<TEntity, TRelated>> ConpositeSideProperty
-            )
-                        where TEntity : class where TRelated : CompornentClass<TEntity, DataType> where DataType : struct
+                        Expression<Func<TEntity, object>> ConpositeSideID,
+            Expression<Func<TEntity, TRelated>> ConpositeSideProperty)
+                        where TEntity : class where TRelated : CompornentClass<DataType> where DataType : struct
         {
             EntityTypeBuilder.Navigation(ConpositeSideProperty);
             EntityTypeBuilder.HasOne(ConpositeSideProperty)
-                .WithOne(CompornentClass => CompornentClass.CompornentSideNavigation);
+                .WithOne()
+                .HasForeignKey(ConpositeSideID);
+                
             return EntityTypeBuilder;
         }
         public static EntityTypeBuilder<TRelated> ConfigureCompornentSide<TEntity, TRelated, DataType>(
             this EntityTypeBuilder<TRelated> EntityTypeBuilder,
             Expression<Func<TEntity, object>> ConpositeSideID,
             Expression<Func<TEntity, TRelated>> ConpositeSideProperty)
-            where TEntity : class where TRelated : CompornentClass<TEntity, DataType> where DataType : struct
+            where TEntity : class where TRelated : CompornentClass<DataType> where DataType : struct
         {
             EntityTypeBuilder.ToTable(typeof(TEntity).ToString() + '_' + ConpositeSideProperty.Type.ToString() + "_Values");
             EntityTypeBuilder.HasKey(d => d.iD);
             EntityTypeBuilder.Property(d => d.value).IsRequired();
-            EntityTypeBuilder.Navigation(d => d.CompornentSideNavigation);
-            EntityTypeBuilder.HasOne(d => d.CompornentSideNavigation)
-                .WithOne(ConpositeSideProperty)
-                   .HasForeignKey(ConpositeSideID);
+            EntityTypeBuilder.HasOne<TEntity>().WithOne().HasForeignKey(ConpositeSideID);
             return EntityTypeBuilder;
         }
     }
