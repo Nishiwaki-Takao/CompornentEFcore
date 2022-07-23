@@ -10,7 +10,7 @@ namespace CompornentEFcore
                         this EntityTypeBuilder<TEntity> EntityTypeBuilder,
             Expression<Func<TEntity, TRelated>> ConpositeSideProperty
             )
-                        where TEntity : class where TRelated : CompornentClass<TEntity, DataType> where DataType : struct
+                        where TEntity : class where TRelated : CompornentClass<TRelated,TEntity, DataType> where DataType : struct
         {
             EntityTypeBuilder.Navigation(ConpositeSideProperty);
             EntityTypeBuilder.HasOne(ConpositeSideProperty)
@@ -21,7 +21,7 @@ namespace CompornentEFcore
             this EntityTypeBuilder<TRelated> EntityTypeBuilder,
             Expression<Func<TEntity, object>> ConpositeSideID,
             Expression<Func<TEntity, TRelated>> ConpositeSideProperty)
-            where TEntity : class where TRelated : CompornentClass<TEntity, DataType> where DataType : struct
+            where TEntity : class where TRelated : CompornentClass<TRelated,TEntity, DataType> where DataType : struct
         {
             EntityTypeBuilder.ToTable(typeof(TEntity).ToString() + '_' + ConpositeSideProperty.Type.ToString() + "_Values");
             EntityTypeBuilder.HasKey(d => d.iD);

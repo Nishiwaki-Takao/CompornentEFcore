@@ -1,6 +1,6 @@
 ﻿namespace CompornentEFcore
 {
-    public abstract class CompornentClass<TEntity, DataType> where TEntity : class where DataType : struct
+    public abstract class CompornentClass<TSelf,TEntity, DataType>where TSelf : CompornentClass<TSelf, TEntity, DataType> where TEntity : class where DataType : struct
     {
         public CompornentClass() { value = default(DataType); }
         public CompornentClass(DataType value) { this.value = value; }
